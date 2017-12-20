@@ -71,7 +71,7 @@ class WaitForClusterDisableTask extends AbstractWaitForClusterWideClouddriverTas
     }
 
     // Assume a missing server group is disabled.
-    boolean isDisabled = serverGroup.map({ it.disabled } as Function<TargetServerGroup, Boolean>).orElse(true)
+    boolean isDisabled = serverGroup.map({ it.disabled && it.instances.every { it.healthState != 'Up' } } as Function<TargetServerGroup, Boolean>).orElse(true)
 
     // If the server group shows as disabled, we don't need to do anything special w.r.t. interestingHealthProviderNames.
     if (isDisabled) {
